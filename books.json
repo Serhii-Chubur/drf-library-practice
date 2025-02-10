@@ -1,0 +1,112 @@
+[
+    {
+        "model": "book.book",
+        "pk": 1,
+        "fields": {
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "cover": "HARD",
+            "inventory": 50,
+            "daily_fee": "1.50"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 2,
+        "fields": {
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "cover": "SOFT",
+            "inventory": 30,
+            "daily_fee": "2.00"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 3,
+        "fields": {
+            "title": "1984",
+            "author": "George Orwell",
+            "cover": "HARD",
+            "inventory": 40,
+            "daily_fee": "1.75"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 4,
+        "fields": {
+            "title": "Pride and Prejudice",
+            "author": "Jane Austen",
+            "cover": "SOFT",
+            "inventory": 60,
+            "daily_fee": "1.25"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 5,
+        "fields": {
+            "title": "The Catcher in the Rye",
+            "author": "J.D. Salinger",
+            "cover": "HARD",
+            "inventory": 20,
+            "daily_fee": "2.50"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 6,
+        "fields": {
+            "title": "The Hobbit",
+            "author": "J.R.R. Tolkien",
+            "cover": "SOFT",
+            "inventory": 70,
+            "daily_fee": "1.80"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 7,
+        "fields": {
+            "title": "Fahrenheit 451",
+            "author": "Ray Bradbury",
+            "cover": "HARD",
+            "inventory": 30,
+            "daily_fee": "2.20"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 8,
+        "fields": {
+            "title": "Brave New World",
+            "author": "Aldous Huxley",
+            "cover": "SOFT",
+            "inventory": 50,
+            "daily_fee": "1.90"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 9,
+        "fields": {
+            "title": "The Picture of Dorian Gray",
+            "author": "Oscar Wilde",
+            "cover": "HARD",
+            "inventory": 40,
+            "daily_fee": "2.00"
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 10,
+        "fields": {
+            "title": "Moby Dick",
+            "author": "Herman Melville",
+            "cover": "SOFT",
+            "inventory": 10,
+            "daily_fee": "2.75"
+        }
+    }
+]
