@@ -1,0 +1,5 @@
+[flake8]
+extend-ignore = E203
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,.venv,.vscode,migrations,settings.py
+max-complexity = 10
+ignore = E266, W503, N807, N818
