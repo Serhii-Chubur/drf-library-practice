@@ -5,7 +5,14 @@ from django.contrib.auth import get_user_model
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("id", "email", "password", "is_staff")
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "password",
+            "is_staff",
+        )
         read_only_fields = (
             "id",
             "is_staff",
