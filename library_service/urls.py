@@ -23,4 +23,5 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("book.urls")),
+    path("users/", include("user.urls")),
 ] + debug_toolbar_urls()
