@@ -1,8 +1,9 @@
 import datetime
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
 
 
@@ -14,27 +15,35 @@ from borrowing.serializers import BorrowingSerializer
 class BorrowingListCreateAPIView(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = super().get_queryset()
         user_id = self.request.GET.get("user_id")
         is_active = self.request.GET.get("is_active")
-        if user_id:
-            queryset = queryset.filter(user__id=user_id)
+        if not self.request.user.is_superuser:
+            queryset = queryset.filter(user=self.request.user)
+
         if is_active:
             if is_active.lower() in ("true", "1", "yes"):
                 queryset = queryset.filter(actual_return_date__isnull=True)
             elif is_active.lower() in ("false", "0", "no"):
                 queryset = queryset.filter(actual_return_date__isnull=False)
+
+        if self.request.user.is_superuser:
+            if user_id:
+                queryset = queryset.filter(user__id=user_id)
         return queryset
 
 
 class BorrowingDetailAPIView(generics.RetrieveAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 @api_view(["GET", "PUT"])
+@permission_classes([IsAuthenticated])
 def return_book(request, pk, *args, **kwargs):
     try:
         borrowing = Borrowing.objects.get(pk=pk)
