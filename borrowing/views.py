@@ -8,7 +8,12 @@ from django.db import transaction
 
 
 from borrowing.models import Borrowing
-from borrowing.serializers import BorrowingSerializer
+from borrowing.serializers import (
+    BorrowingSerializer,
+    BorrowingListSerializer,
+    BorrowingDetailSerializer,
+    BorrowingReturnSerializer,
+)
 
 
 # Create your views here.
@@ -35,10 +40,15 @@ class BorrowingListCreateAPIView(generics.ListCreateAPIView):
                 queryset = queryset.filter(user__id=user_id)
         return queryset
 
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return BorrowingListSerializer
+        return super().get_serializer_class()
+
 
 class BorrowingDetailAPIView(generics.RetrieveAPIView):
     queryset = Borrowing.objects.all()
-    serializer_class = BorrowingSerializer
+    serializer_class = BorrowingDetailSerializer
     permission_classes = (IsAuthenticated,)
 
 
@@ -53,7 +63,7 @@ def return_book(request, pk, *args, **kwargs):
             {"message": "Book not found"}, status=status.HTTP_404_NOT_FOUND
         )
 
-    borrowing_serializer = BorrowingSerializer(borrowing)
+    borrowing_serializer = BorrowingDetailSerializer(borrowing)
 
     if request.method == "GET":
         if borrowing.actual_return_date:
@@ -65,11 +75,9 @@ def return_book(request, pk, *args, **kwargs):
 
     if request.method == "PUT":
 
-        borrowing_serializer = BorrowingSerializer(
+        borrowing_serializer = BorrowingReturnSerializer(
             borrowing,
             data={
-                "book": book.id,
-                "expected_return_date": borrowing.expected_return_date,
                 "actual_return_date": datetime.date.today(),
             },
         )
