@@ -24,4 +24,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("books/", include("book.urls")),
     path("users/", include("user.urls")),
+    path("borrowings/", include("borrowing.urls")),
 ] + debug_toolbar_urls()
