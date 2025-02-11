@@ -27,11 +27,18 @@ def return_book(request, pk, *args, **kwargs):
         borrowing = Borrowing.objects.get(pk=pk)
         book = borrowing.book
     except borrowing.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"message": "Book not found"}, status=status.HTTP_404_NOT_FOUND
+        )
 
     borrowing_serializer = BorrowingSerializer(borrowing)
 
     if request.method == "GET":
+        if borrowing.actual_return_date:
+            return Response(
+                {"message": "Book is already returned"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response(borrowing_serializer.data)
 
     if request.method == "PUT":

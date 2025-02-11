@@ -1,6 +1,4 @@
 import datetime
-import book
-import borrowing
 from borrowing.models import Borrowing
 from rest_framework import serializers
 
@@ -23,7 +21,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
         validated_data["actual_return_date"] = None
         validated_data["borrow_date"] = datetime.date.today()
         book = validated_data["book"]
-        if book.inventory < 1:
+        if book.inventory == 0:
             raise serializers.ValidationError("Book is not available")
         book.inventory -= 1
         book.save()
