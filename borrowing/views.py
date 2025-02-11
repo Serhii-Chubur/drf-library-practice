@@ -11,9 +11,22 @@ from borrowing.serializers import BorrowingSerializer
 
 
 # Create your views here.
-class BorrowingListAPIView(generics.ListCreateAPIView):
+class BorrowingListCreateAPIView(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.GET.get("user_id")
+        is_active = self.request.GET.get("is_active")
+        if user_id:
+            queryset = queryset.filter(user__id=user_id)
+        if is_active:
+            if is_active.lower() in ("true", "1", "yes"):
+                queryset = queryset.filter(actual_return_date__isnull=True)
+            elif is_active.lower() in ("false", "0", "no"):
+                queryset = queryset.filter(actual_return_date__isnull=False)
+        return queryset
 
 
 class BorrowingDetailAPIView(generics.RetrieveAPIView):
