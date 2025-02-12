@@ -3,6 +3,8 @@ from book.serializers import BookSerializer, BookListSerializer
 from borrowing.models import Borrowing
 from rest_framework import serializers
 
+import notification_system
+
 
 class BorrowingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +28,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Book is not available")
         book.inventory -= 1
         book.save()
+
         return super().create(validated_data)
 
 
