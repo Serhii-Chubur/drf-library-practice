@@ -1,10 +1,17 @@
+import datetime
 import logging
 import os
+import django
 import requests
+
 from dotenv import load_dotenv
-from telegram import Message, Update
+from telegram import Update
 from telegram.ext import Application
 from telegram.ext import ContextTypes, CommandHandler
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "library_service.settings")
+django.setup()
+
 
 load_dotenv()
 
@@ -26,6 +33,18 @@ CHAT_LINK = os.getenv("CHAT_LINK")
 payload = {"chat_id": CHAT_ID, "text": None}
 
 URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+
+
+def send_overdue_message(user, books):
+    message = (
+        f"{user.get_full_name()} has borrowed:\n"
+        f"{books}.\n"
+        f"Your borrowings are expired.\n"
+        f"Please return it as soon as possible!"
+    )
+
+    payload["text"] = message
+    return requests.post(URL, data=payload)
 
 
 def send_returned_message(user, book, borrowing):

@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     "book",
     "borrowing",
     "notification_system",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -151,4 +153,22 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ROTATE_REFRESH_TOKENS": False,
+}
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # Or your chosen broker URL
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "django-cache"
+CELERY_CACHE_BACKEND = "default"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+# django setting.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "my_cache_table",
+    }
 }
