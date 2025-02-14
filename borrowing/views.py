@@ -24,12 +24,6 @@ from notification_system.library_bot import (
     send_created_message,
 )
 
-# from notification_system.library_bot import (
-#     borrowing_created,
-#     borrowing_returned,
-#     borrowing_overdue,
-# )
-
 
 # Create your views here.
 class BorrowingListCreateAPIView(generics.ListCreateAPIView):
@@ -45,7 +39,7 @@ class BorrowingListCreateAPIView(generics.ListCreateAPIView):
         send_created_message(
             request.user,
             serializer.validated_data["book"],
-            serializer.data["borrow_date"],
+            serializer.data["expected_return_date"],
         )
 
         headers = self.get_success_headers(serializer.data)

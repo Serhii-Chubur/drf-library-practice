@@ -9,9 +9,11 @@ from telegram import Update
 from telegram.ext import Application
 from telegram.ext import ContextTypes, CommandHandler
 
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "library_service.settings")
 django.setup()
 
+from user.models import User
 
 load_dotenv()
 
@@ -35,13 +37,19 @@ payload = {"chat_id": CHAT_ID, "text": None}
 URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 
-def send_overdue_message(user, books):
-    message = (
-        f"{user.get_full_name()} has borrowed:\n"
-        f"{books}.\n"
-        f"Your borrowings are expired.\n"
-        f"Please return it as soon as possible!"
-    )
+def send_overdue_message(
+    user: User = None, books: str = None, overdue: bool = True
+):
+    if overdue:
+        message = (
+            f"{user.get_full_name()},\n"
+            f"Your borrowings:\n"
+            f"{books}\n"
+            f"are expired.\n"
+            f"Please return it as soon as possible!"
+        )
+    else:
+        message = "No borrowings overdue today!"
 
     payload["text"] = message
     return requests.post(URL, data=payload)
@@ -74,7 +82,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
     await context.bot.send_message(
         chat_id=chat_id,
-        text=f"I'm a Library bot, I'll notify you about your borrowings "
+        text=f"I'm a Library bot, I'll notify you about borrowings "
         f"in our chat! You can access the chat here: {CHAT_LINK}",
     )
 
