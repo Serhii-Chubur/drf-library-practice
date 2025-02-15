@@ -98,6 +98,12 @@ class AuthorizedBookApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_delete_book_forbidden(self):
+        book = sample_book()
+        res = self.client.delete(reverse("book:books-detail", args=[book.id]))
+
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
 
 class AdminUserBookApiTests(TestCase):
     def setUp(self):
