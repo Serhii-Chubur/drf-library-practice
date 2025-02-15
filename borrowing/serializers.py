@@ -2,6 +2,7 @@ import datetime
 from book.serializers import BookSerializer, BookListSerializer
 from borrowing.models import Borrowing
 from rest_framework import serializers
+from notification_system.library_bot import send_created_message
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -33,6 +34,11 @@ class BorrowingSerializer(serializers.ModelSerializer):
             )
         book.inventory -= 1
         book.save()
+        send_created_message(
+            validated_data["user"],
+            book,
+            validated_data["expected_return_date"],
+        )
 
         return super().create(validated_data)
 

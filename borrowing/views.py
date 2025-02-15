@@ -15,6 +15,8 @@ from borrowing.serializers import (
     BorrowingReturnSerializer,
 )
 
+from notification_system.library_bot import send_returned_message
+
 
 # Create your views here.
 class BorrowingListCreateAPIView(generics.ListCreateAPIView):
@@ -87,6 +89,7 @@ def return_book(request, pk, *args, **kwargs):
                 borrowing_serializer.save()
                 book.inventory += 1
                 book.save()
+                send_returned_message(request.user, book, borrowing)
             return Response(borrowing_serializer.data)
         return Response(
             borrowing_serializer.errors, status=status.HTTP_400_BAD_REQUEST
