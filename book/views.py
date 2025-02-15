@@ -2,8 +2,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from book.models import Book
+from book.permissions import IsAdminOrReadOnly
 from book.serializers import BookListSerializer, BookSerializer
 
 
@@ -11,6 +13,14 @@ from book.serializers import BookListSerializer, BookSerializer
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = (IsAdminOrReadOnly,)
+
+    def get_permissions(self):
+        if self.action == "retrieve":
+            return [
+                IsAuthenticated(),
+            ]
+        return super().get_permissions()
 
     def get_queryset(self):
         is_available = self.request.GET.get("is_available")
@@ -29,6 +39,9 @@ class BookViewSet(viewsets.ModelViewSet):
             reverse("book:books-list") + "?is_available=True"
         )
 
-    @action(detail=False)
+    @action(
+        detail=False,
+        url_name="all",
+    )
     def all_books(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse("book:books-list"))
