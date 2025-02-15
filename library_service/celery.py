@@ -3,7 +3,7 @@ from celery import Celery
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "library_service.settings")
 
-app = Celery("notification_system")
+app = Celery("library_service")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks(
@@ -13,7 +13,6 @@ app.autodiscover_tasks(
 )
 
 
-# Optional configuration, see the application user guide.
 app.conf.update(
     result_expires=3600,
 )

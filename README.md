@@ -38,6 +38,7 @@ This project aims to develop an online management system for a library's book bo
 
 ### Run with Docker
 - Docker should be installed
+    - python -m notification_system.library_bot
     - docker-compose build
     - docker-compose up
 

@@ -40,5 +40,5 @@ app.conf.beat_schedule = {
     "find-overdue-borrowings": {
         "task": "notification_system.tasks.find_overdue_borrowings",
         "schedule": crontab(hour=9, minute=0, day_of_week="mon-fri"),
-    },
+    }
 }
