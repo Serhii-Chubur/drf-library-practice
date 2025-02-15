@@ -1,0 +1,9 @@
+.venv
+.idea
+.flake8
+.env
+.vscode
+celerybeat-schedule.*
+db.*
+Dockerfile
+docker-compose.yml
