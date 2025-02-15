@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import status
-from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from borrowing.serializers import (
@@ -15,7 +14,6 @@ from borrowing.serializers import (
 
 from book.models import Book
 from borrowing.models import Borrowing
-from user import serializers
 from user.models import User
 
 # Create your tests here.
@@ -147,7 +145,7 @@ class AuthorizedBorrowingApiTests(TestCase):
         book = sample_borrowing(user=self.user)
         res = self.client.delete(reverse("book:books-detail", args=[book.id]))
 
-        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class AdminUserBorrowingApiTests(TestCase):

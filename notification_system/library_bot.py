@@ -1,4 +1,3 @@
-import datetime
 import logging
 import os
 import django
@@ -40,9 +39,14 @@ URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 def send_overdue_message(
     user: User = None, books: str = None, overdue: bool = True
 ):
+    name_for_msg = (
+        user.get_full_name()
+        if user.first_name or user.last_name
+        else user.email
+    )
     if overdue:
         message = (
-            f"{user.get_full_name()},\n"
+            f"{name_for_msg},\n"
             f"Your borrowings:\n"
             f"{books}\n"
             f"are expired.\n"
@@ -56,8 +60,13 @@ def send_overdue_message(
 
 
 def send_returned_message(user, book, borrowing):
+    name_for_msg = (
+        user.get_full_name()
+        if user.first_name or user.last_name
+        else user.email
+    )
     message = (
-        f"{user.get_full_name()} has returned "
+        f"{name_for_msg} has returned "
         f"{book.title} on "
         f"{borrowing.actual_return_date}"
     )
@@ -67,11 +76,12 @@ def send_returned_message(user, book, borrowing):
 
 
 def send_created_message(user, book, date):
-    message = (
-        f"{user.get_full_name()} has borrowed "
-        f"{book.title} until "
-        f"{date}"
+    name_for_msg = (
+        user.get_full_name()
+        if user.first_name or user.last_name
+        else user.email
     )
+    message = f"{name_for_msg} has borrowed {book.title} until {date}"
 
     payload["text"] = message
 

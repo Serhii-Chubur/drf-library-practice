@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms import ValidationError
-
 from book.models import Book
 from user.models import User
 
@@ -18,4 +16,8 @@ class Borrowing(models.Model):
     )
 
     def __str__(self):
-        return f"Borrowing of {self.book.title} by {self.user.first_name} {self.user.last_name}"
+        return (
+            f"Borrowing of {self.book.title} by"
+            f"{self.user.first_name} "
+            f"{self.user.last_name}"
+        )
