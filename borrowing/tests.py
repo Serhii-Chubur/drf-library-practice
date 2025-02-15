@@ -1,16 +1,15 @@
 import datetime
 from decimal import Decimal
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
+from rest_framework.reverse import reverse
 
 from borrowing.serializers import (
     BorrowingListSerializer,
     BorrowingDetailSerializer,
 )
-
 
 from book.models import Book
 from borrowing.models import Borrowing
@@ -73,7 +72,7 @@ class AuthorizedBorrowingApiTests(TestCase):
         serializer = BorrowingListSerializer(borrowing, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.data["results"], serializer.data)
 
     def test_borrowing_list_filter_by_returned_status(self):
         borrowing1 = sample_borrowing(user=self.user)
@@ -87,12 +86,12 @@ class AuthorizedBorrowingApiTests(TestCase):
             res = self.client.get(BORROWING_URL, {"is_active": stat})
 
             self.assertEqual(res.status_code, status.HTTP_200_OK)
-            self.assertIn(serializer1.data, res.data)
+            self.assertIn(serializer1.data, res.data["results"])
         for stat in ("false", "0", "no"):
             res = self.client.get(BORROWING_URL, {"is_active": stat})
 
             self.assertEqual(res.status_code, status.HTTP_200_OK)
-            self.assertIn(serializer2.data, res.data)
+            self.assertIn(serializer2.data, res.data["results"])
 
     def test_borrowing_list_filter_by_user_id_forbidden(self):
         sample_borrowing(user=self.user)
@@ -105,7 +104,7 @@ class AuthorizedBorrowingApiTests(TestCase):
         serializer = BorrowingListSerializer(borrowings, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.data["results"], serializer.data)
         for borrowing in serializer.data:
             self.assertEqual(borrowing.get("user"), self.user.email)
 
@@ -167,7 +166,7 @@ class AdminUserBorrowingApiTests(TestCase):
         serializer = BorrowingListSerializer(borrowings, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.data["results"], serializer.data)
         for borrowing in serializer.data:
             self.assertEqual(borrowing.get("user"), self.user.email)
 

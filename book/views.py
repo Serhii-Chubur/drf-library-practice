@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import (
     extend_schema,
@@ -16,10 +17,15 @@ from book.serializers import BookListSerializer, BookSerializer
 
 
 # Create your views here.
+class CustomBoookPagination(PageNumberPagination):
+    page_size = 5
+
+
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = CustomBoookPagination
 
     def get_permissions(self):
         if self.action == "retrieve":

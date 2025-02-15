@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from django.db import transaction
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
@@ -21,10 +22,17 @@ from notification_system.library_bot import send_returned_message
 
 
 # Create your views here.
+
+
+class CustomBorrowingPagination(PageNumberPagination):
+    page_size = 5
+
+
 class BorrowingListCreateAPIView(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CustomBorrowingPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
