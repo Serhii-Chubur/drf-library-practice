@@ -1,15 +1,10 @@
 import datetime
-import asyncio
-import re
-import requests
-
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
-from telegram import Update
 
 
 from borrowing.models import Borrowing
@@ -19,10 +14,6 @@ from borrowing.serializers import (
     BorrowingDetailSerializer,
     BorrowingReturnSerializer,
 )
-from notification_system.library_bot import (
-    send_returned_message,
-    send_created_message,
-)
 
 
 # Create your views here.
@@ -30,25 +21,6 @@ class BorrowingListCreateAPIView(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
     permission_classes = (IsAuthenticated,)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        send_created_message(
-            request.user,
-            serializer.validated_data["book"],
-            serializer.data["expected_return_date"],
-        )
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
-    def perform_create(self, serializer):
-        serializer.save()
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -115,9 +87,6 @@ def return_book(request, pk, *args, **kwargs):
                 borrowing_serializer.save()
                 book.inventory += 1
                 book.save()
-
-            send_returned_message(request.user, book, borrowing)
-
             return Response(borrowing_serializer.data)
         return Response(
             borrowing_serializer.errors, status=status.HTTP_400_BAD_REQUEST

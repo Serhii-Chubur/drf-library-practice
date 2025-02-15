@@ -17,22 +17,5 @@ class Borrowing(models.Model):
         User, on_delete=models.CASCADE, related_name="borrowings"
     )
 
-    def clean(self):
-        if self.expected_return_date <= self.borrow_date:
-            raise ValidationError(
-                "Expected return date must be after borrow date."
-            )
-        if (
-            self.actual_return_date
-            and self.actual_return_date < self.borrow_date
-        ):
-            raise ValidationError(
-                "Actual return date must be on or after borrow date."
-            )
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return f"Borrowing of {self.book.title} by {self.user.first_name} {self.user.last_name}"

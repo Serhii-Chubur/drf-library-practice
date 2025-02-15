@@ -3,8 +3,6 @@ from book.serializers import BookSerializer, BookListSerializer
 from borrowing.models import Borrowing
 from rest_framework import serializers
 
-import notification_system
-
 
 class BorrowingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +24,13 @@ class BorrowingSerializer(serializers.ModelSerializer):
         book = validated_data["book"]
         if book.inventory == 0:
             raise serializers.ValidationError("Book is not available")
+        if (
+            validated_data["expected_return_date"]
+            <= validated_data["borrow_date"]
+        ):
+            raise serializers.ValidationError(
+                "Expected return date must be after borrow date."
+            )
         book.inventory -= 1
         book.save()
 
@@ -51,6 +56,16 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
             "book",
             "user",
         )
+
+    def update(self, instance, validated_data):
+        if (
+            validated_data["actual_return_date"]
+            and validated_data["actual_return_date"] < instance.borrow_date
+        ):
+            raise serializers.ValidationError(
+                "Actual return date must be on or after borrow date."
+            )
+        return super().update(instance, validated_data)
 
 
 class BorrowingListSerializer(serializers.ModelSerializer):
