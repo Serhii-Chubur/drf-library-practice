@@ -18,7 +18,6 @@ class BorrowingSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "user", "actual_return_date")
 
     def create(self, validated_data):
-        print(validated_data)
         validated_data["user"] = self.context["request"].user
         validated_data["actual_return_date"] = None
         validated_data["borrow_date"] = datetime.date.today()
@@ -59,7 +58,6 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        print(validated_data)
         if (
             validated_data["actual_return_date"]
             and validated_data["actual_return_date"] < instance.borrow_date
