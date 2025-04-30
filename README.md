@@ -17,15 +17,30 @@ This project aims to develop an online management system for a library's book bo
 - Authentication: JWT
 
 ## Installation
-- Clone the repository:
-    - git clone https://github.com/Serhii-Chubur/drf-library-practice
-    - cd library-management-system
-- Install dependencies:
-    - pip install -r requirements.txt
-- Set up the database:
-    - [Insert database setup instructions]
-- Run the application:
-    - [Insert command to run the application]
+### Set up the database:
+- Install PostgreSQL & create db
+
+
+### Run with GitHub
+- git clone https://github.com/Serhii-Chubur/drf-library-practice
+- cd drf-library-practice
+- copy .env.sample to .env & fill it up
+- python -m venv .venv
+- .venv\Scripts\activate
+- pip install -r requirements.txt
+- python manage.py migrate
+- python manage.py createsuperuser
+- python manage.py loaddata books.json
+- python manage.py runserver
+- python -m notification_system.library_bot
+- celery -A library_service.celery worker --loglevel=info --pool=solo
+- celery -A library_service.celery beat --loglevel=info
+
+### Run with Docker
+- Docker should be installed
+    - python -m notification_system.library_bot
+    - docker-compose build
+    - docker-compose up
 
 ## API Endpoints
 ### Books Service:
